@@ -5,30 +5,29 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class ProductVariation extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'product_id',
         'name',
-        'key_feature_left',
-        'key_feature_right',
         'price',
-        'description',
-        'primary_image',
-        'secondary_images',
-        'video_url',
         'stock',
         'status'
     ];
 
     protected $casts = [
-        'secondary_images' => 'array',
         'price' => 'decimal:2'
     ];
 
-    public function variations()
+    public function product()
     {
-        return $this->hasMany(ProductVariation::class);
+        return $this->belongsTo(Product::class);
+    }
+
+    public function attributeValues()
+    {
+        return $this->belongsToMany(AttributeValue::class, 'variation_attribute_values');
     }
 }
