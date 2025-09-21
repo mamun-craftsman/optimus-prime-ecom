@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'status' => CheckUserStatus::class,
         ]);
+        $middleware->redirectGuestsTo('/user/login');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

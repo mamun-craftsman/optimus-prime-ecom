@@ -2,47 +2,77 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
+        'role',
+        'photo',
+        'phone',
+        'status',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    protected $attributes = [
+        'photo' => 'avatar.png',
+        'role' => 'customer',
+        'status' => 'active',
+    ];
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            if (empty($user->username)) {
+                $user->username = static::generateUsername($user->name, $user->phone);
+            }
+        });
+    }
+
+    public static function generateUsername($name, $phone = null)
+    {
+        $baseUsername = Str::slug($name) . '_' . substr($phone, -4);
+        $username = Str::lower($baseUsername);
+        $counter = 1;
+
+        while (static::where('username', $username)->exists()) {
+            $username = Str::lower($baseUsername) . $counter;
+            $counter++;
+        }
+
+        return $username;
+    }
+
+    public function customer()
+    {
+        return $this->hasOne(Customer::class);
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        return asset($this->photo ? 'storage/' . $this->photo : 'avatar.png');
     }
 }
