@@ -113,8 +113,8 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'username' => 'required|string|max:50|unique:users,username',
             'email' => 'required|string|email|max:255|unique:users,email',
+            'phone' => 'required|string|max:20|unique:users,phone',
             'password' => 'required|string|min:6|confirmed',
             'permanent_addr' => 'required|string|max:1000',
             'shipping_addr' => 'nullable|string|max:1000',
@@ -130,6 +130,7 @@ class AuthController extends Controller
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
+                'phone' => $request->phone,
                 'password' => bcrypt($request->password),
                 'role' => 'customer',
                 'status' => 'active',

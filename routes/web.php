@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\SubcategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController as ControllersCategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ProfileController;
@@ -87,11 +88,12 @@ Route::controller(ControllersSubcategoryController::class)->group(function () {
 Route::controller(ControllersProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index');
     Route::get('/products/search', 'search')->name('products.search');
-    Route::get('/product/{product:slug}', 'show')->name('product.show');
+    Route::get('/product/{product:slug}', 'show')->name('products.show');
 });
 
 // Cart Controller Routes
 Route::controller(CartController::class)
+     ->middleware('auth', 'status:customer')
      ->prefix('cart')
      ->name('cart.')
      ->group(function () {
@@ -102,6 +104,19 @@ Route::controller(CartController::class)
          Route::post('/clear', 'clear')->name('clear');
          Route::get('/count', 'count')->name('count');
      });
+
+
+Route::middleware('auth')->group(function () {
+    Route::prefix('checkout')->name('checkout.')->group(function () {
+        Route::get('/', [CheckoutController::class, 'index'])->name('index');
+        Route::post('/process', [CheckoutController::class, 'process'])->name('process');
+        Route::get('/success', [CheckoutController::class, 'success'])->name('success');
+        Route::get('/cancel', [CheckoutController::class, 'cancel'])->name('cancel');
+    });
+});
+
+Route::any('/checkout/callback', [CheckoutController::class, 'callback'])->name('checkout.callback');
+
 
 
 

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>OPTIMUS PRIME - Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -627,15 +628,22 @@
                 </ul>
             </div>
 
-            <div class="sidebar-fixed-footer p-4 border-t border-gray-700">
+            <div class="sidebar-fixed-footer p-4 border-t border-gray-700 space-y-3">
+                <a href="{{ route('home.index') }}"
+                    class="w-full block py-3 text-center rounded-lg text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 transition-all">
+                    <i class="fas fa-home mr-2"></i> Home
+                </a>
+                
                 <a href="{{ route('cart.index') }}"
                     class="w-full block py-3 text-center rounded-lg text-white bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 transition-all">
                     <i class="fas fa-shopping-cart mr-2"></i> View Cart
                 </a>
             </div>
+
         </div>
 
         <div class="md:ml-64">
+            @include('components.home_navigation', ['globalSubcategories' => $globalSubcategories])
             @yield('content')
         </div>
         @include('components.home_footer')
@@ -774,6 +782,7 @@
         document.head.appendChild(style);
     </script>
     @stack('scripts')
+    <script src="{{asset('js/cart.js')}}"></script>
 </body>
 
 </html>

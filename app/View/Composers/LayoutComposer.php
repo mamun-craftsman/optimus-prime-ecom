@@ -17,6 +17,14 @@ class LayoutComposer
                               ->orderBy('name')
                               ->get();
 
-        $view->with('globalCategories', $categories);
+        $subcategories = collect();
+        foreach ($categories as $category) {
+            $subcategories = $subcategories->merge($category->subcategories);
+        }
+
+        $view->with([
+            'globalCategories' => $categories,
+            'globalSubcategories' => $subcategories
+        ]);
     }
 }
