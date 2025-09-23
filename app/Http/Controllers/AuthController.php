@@ -79,7 +79,7 @@ class AuthController extends Controller
             case 'admin':
                 return redirect()->route('admin.dashboard');
             case 'customer':
-                return redirect()->route('customer.dashboard');
+                return redirect()->route('home.index');
             default:
                 return redirect()->route('home');
         }
@@ -93,7 +93,7 @@ class AuthController extends Controller
             case 'admin':
                 return route('admin.dashboard');
             case 'customer':
-                return route('customer.dashboard');
+                return route('home.index');
             default:
                 return route('home');
         }
@@ -147,7 +147,7 @@ class AuthController extends Controller
             Auth::login($user);
             $request->session()->regenerate();
 
-            return redirect()->route('customer.dashboard')->with('success', 'Account created and logged in successfully!');
+            return redirect()->route('home.index')->with('success', 'Account created and logged in successfully!');
         } catch (Exception $e) {
             DB::rollBack();
 

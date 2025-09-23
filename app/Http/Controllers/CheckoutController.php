@@ -151,12 +151,10 @@ public function callback(Request $request)
                 'address' => $address
             ]);
             
-            // Check if order already exists
             $existingOrder = Order::where('order_number', $spOrderId)->first();
             Log::info('Existing order check', ['exists' => $existingOrder ? 'YES' : 'NO']);
             
             if (!$existingOrder) {
-                // Try to find temp order
                 $tempOrder = DB::table('temp_orders')->where('order_id', $tempOrderId)->first();
                 Log::info('Temp order search', [
                     'searching_for' => $tempOrderId,

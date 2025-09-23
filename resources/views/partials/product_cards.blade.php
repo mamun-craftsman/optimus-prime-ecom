@@ -31,14 +31,30 @@
         @endif
 
         <div class="flex justify-between items-center mt-auto">
+           
             <div class="flex items-center text-yellow-400">
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span class="text-white ml-1">4.7</span>
+                @php
+                    $averageRating = $product->reviews->avg('rating') ?? 0;
+                    $fullStars = floor($averageRating);
+                    $hasHalfStar = $averageRating - $fullStars >= 0.5;
+                    $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
+                @endphp
+                
+                @for ($i = 1; $i <= $fullStars; $i++)
+                    <i class="fas fa-star"></i>
+                @endfor
+                
+                @if ($hasHalfStar)
+                    <i class="fas fa-star-half-alt"></i>
+                @endif
+                
+                @for ($i = 1; $i <= $emptyStars; $i++)
+                    <i class="far fa-star"></i>
+                @endfor
+                
+                <span class="text-white ml-1">{{ number_format($averageRating, 1) }}</span>
             </div>
+
              @include('components._cart', ['product' => $product])
         </div>
     </div>

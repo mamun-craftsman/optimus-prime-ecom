@@ -86,10 +86,12 @@
                                 <span class="cart-total">${{ number_format($total, 2) }}</span>
                             </div>
                         </div>
-                        
-                        <button class="btn-primary w-full py-3 rounded-lg text-white font-bold mt-6">
-                            <i class="fas fa-credit-card mr-2"></i> Proceed to Checkout
-                        </button>
+                        <a href="{{route('checkout.index')}}">
+                             <button class="btn-primary w-full py-3 rounded-lg text-white font-bold mt-6">
+                                <i class="fas fa-credit-card mr-2"></i> Proceed to Checkout
+                            </button>
+                        </a>
+                       
                     </div>
                 </div>
             </div>

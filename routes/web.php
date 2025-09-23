@@ -11,6 +11,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController as ControllersProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\SubcategoryController as ControllersSubcategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +90,8 @@ Route::controller(ControllersProductController::class)->group(function () {
     Route::get('/products', 'index')->name('products.index');
     Route::get('/products/search', 'search')->name('products.search');
     Route::get('/product/{product:slug}', 'show')->name('products.show');
+    Route::get('/search-products', 'search')->name('products.search');
+
 });
 
 // Cart Controller Routes
@@ -120,14 +123,24 @@ Route::any('/checkout/callback', [CheckoutController::class, 'callback'])->name(
 
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware('auth', 'status:customer')->group(function () {
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/update', [ProfileController::class, 'updateProfile'])->name('update');
+        Route::put('/password', [ProfileController::class, 'updatePassword'])->name('password');
+        Route::post('/photo', [ProfileController::class, 'updatePhoto'])->name('photo');
+        Route::get('/orders', [ProfileController::class, 'orders'])->name('orders');
+        Route::get('/orders/{id}', [ProfileController::class, 'orderDetails'])->name('order.details');
+    });
 });
+
+Route::middleware('auth', 'status:customer')->group(function () {
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+});
+
+
+
 
 require __DIR__.'/auth.php';

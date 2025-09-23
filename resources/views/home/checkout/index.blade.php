@@ -101,14 +101,12 @@
 @section('content')
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-7xl mx-auto">
-        <!-- Header -->
         <div class="mb-8">
             <h1 class="text-4xl font-bold text-white mb-2">Secure Checkout</h1>
             <p class="text-gray-400">Complete your order with our secure payment system</p>
         </div>
         
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column - Billing Information -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
             <div class="lg:col-span-2">
                 <div class="checkout-card p-8">
                     <div class="flex items-center mb-6">
@@ -119,7 +117,6 @@
                     <form id="checkoutForm" action="{{ route('checkout.process') }}" method="POST">
                         @csrf
                         
-                        <!-- Personal Information -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                             <div>
                                 <label class="block text-gray-300 mb-2 font-medium">
@@ -158,7 +155,6 @@
                             @enderror
                         </div>
 
-                        <!-- Shipping Address -->
                         <div class="mb-8">
                             <div class="flex items-center justify-between mb-4">
                                 <div class="flex items-center">
@@ -184,7 +180,6 @@
                                 @enderror
                             </div>
 
-                            <!-- Save Address Option -->
                             <div class="flex items-center">
                                 <input type="checkbox" name="save_shipping_address" id="saveAddress" 
                                        class="w-4 h-4 text-neon bg-gray-800 border-gray-600 rounded focus:ring-neon focus:ring-2">
@@ -194,7 +189,6 @@
                             </div>
                         </div>
 
-                        <!-- Payment Method -->
                         <div class="mb-8">
                             <div class="flex items-center mb-6">
                                 <div class="w-8 h-8 bg-gradient-to-r from-neon to-purple-600 rounded-full flex items-center justify-center text-white font-bold mr-3">3</div>
@@ -207,17 +201,17 @@
                                         <input type="radio" name="payment_method" value="surjopay" class="w-5 h-5 text-neon bg-gray-800 border-gray-600 focus:ring-neon focus:ring-2">
                                         <div class="ml-4 flex-1">
                                             <div class="flex items-center">
-                                                <i class="fas fa-credit-card text-2xl text-neon mr-4"></i>
+                                                <img src="{{asset('surjo.jpeg')}}" alt="surjopay" class="w-9 h-9 rounded mr-2">
                                                 <div>
                                                     <h4 class="text-white font-semibold text-lg">SurjoPay</h4>
                                                     <p class="text-gray-400 text-sm">Pay securely with card or mobile banking</p>
                                                 </div>
                                             </div>
                                             <div class="flex items-center mt-2 space-x-2">
-                                                <img src="https://via.placeholder.com/40x25/00f7ff/ffffff?text=VISA" alt="Visa" class="rounded">
-                                                <img src="https://via.placeholder.com/40x25/00f7ff/ffffff?text=MC" alt="Mastercard" class="rounded">
-                                                <img src="https://via.placeholder.com/40x25/00f7ff/ffffff?text=bKash" alt="bKash" class="rounded">
-                                                <img src="https://via.placeholder.com/40x25/00f7ff/ffffff?text=Nagad" alt="Nagad" class="rounded">
+                                                <img src="{{asset('visa.png')}}" alt="Visa" class="rounded">
+                                                <img src="{{asset('mc.png')}}" alt="Mastercard" class="rounded">
+                                                <img src="{{asset('bkash.png')}}" alt="bKash" class="rounded">
+                                                <img src="{{asset('nagad.png')}}" alt="Nagad" class="rounded">
                                             </div>
                                         </div>
                                     </div>
@@ -243,7 +237,6 @@
                             </div>
                         </div>
 
-                        <!-- Place Order Button -->
                         <button type="submit" class="btn-checkout w-full px-8 py-4 rounded-xl text-white font-bold text-lg">
                             <i class="fas fa-lock mr-3"></i>
                             Place Order Securely
@@ -252,15 +245,13 @@
                 </div>
             </div>
 
-            <!-- Right Column - Order Summary -->
             <div class="lg:col-span-1">
-                <div class="checkout-card p-6 sticky top-8">
+                <div class="checkout-card p-4 sticky top-8">
                     <h2 class="text-xl font-bold text-white mb-6 flex items-center">
                         <i class="fas fa-receipt mr-3 text-neon"></i>Order Summary
                     </h2>
                     
-                    <!-- Cart Items -->
-                    <div class="space-y-4 mb-6 max-h-64 overflow-y-auto">
+                    <div class="space-y-3 mb-6 max-h-64 overflow-y-auto">
                         @foreach($cartItems as $item)
                         <div class="order-item p-4">
                             <div class="flex items-center gap-4">
