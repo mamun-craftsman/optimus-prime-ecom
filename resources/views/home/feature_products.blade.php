@@ -20,7 +20,7 @@
         @if($nextPage)
             <button id="load-more"
                 class="px-8 py-3 rounded-lg text-white bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-700 hover:to-cyan-600 transition-all"
-                data-url="{{ route('home') }}"
+                data-url="{{ route('home.index') }}"
                 data-next="{{ $nextPage }}">
                 <i class="fas fa-sync-alt mr-2"></i> Load More Products
             </button>

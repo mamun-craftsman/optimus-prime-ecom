@@ -77,11 +77,11 @@ class AuthController extends Controller
 
         switch ($user->role) {
             case 'admin':
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.orders.index');
             case 'customer':
                 return redirect()->route('home.index');
             default:
-                return redirect()->route('home');
+                return redirect()->route('home.index');
         }
     }
 
@@ -91,7 +91,7 @@ class AuthController extends Controller
 
         switch ($user->role) {
             case 'admin':
-                return route('admin.dashboard');
+                return route('admin.orders.index');
             case 'customer':
                 return route('home.index');
             default:

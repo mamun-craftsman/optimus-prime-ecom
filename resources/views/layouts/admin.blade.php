@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>OPTIMUS PRIME - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -319,7 +320,7 @@
     <div id="adminSidebar" class="sidebar fixed top-0 left-0 h-full w-64 z-50 transform -translate-x-full md:translate-x-0">
         <div class="p-6 border-b border-gray-700">
             <div class="flex items-center justify-between">
-                <h2 class="text-2xl font-bold logo-text text-white glow-text">ADMIN PANEL</h2>
+                <h2 class="text-xl font-bold logo-text text-white glow-text">ADMIN PANEL</h2>
                 <button class="md:hidden text-white" onclick="toggleSidebar()">
                     <i class="fas fa-times text-xl"></i>
                 </button>
@@ -329,21 +330,43 @@
         <div class="p-4">
             <ul class="space-y-2">
                 <li>
-                    <a href="adminDashboard.html">
+                    <a href="{{route('home.index')}}">
                         <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-white">
-                            <i class="fas fa-home mr-3"></i> Dashboard
+                            <i class="fa fa-globe mr-3"></i> Visit Site
                         </button>
                     </a>
                 </li>
                 <li>
-                    <a href="product.html">
-                        <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-white">
-                            <i class="fas fa-box mr-3"></i> Products
-                        </button>
-                    </a>
+                    <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-white" onclick="toggleProductSubmenu()">
+                        <i class="fas fa-box mr-3"></i> Products
+                        <i class="fas fa-chevron-down float-right mt-1 transition-transform" id="productChevron"></i>
+                    </button>
+                    <ul class="ml-8 mt-2 space-y-2 hidden" id="productSubmenu">
+                        <li>
+                            <a href="{{ route('admin.products.index') }}">
+                                <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
+                                    <i class="fas fa-list mr-2"></i> All Products
+                                </button>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.products.create') }}">
+                                <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
+                                    <i class="fas fa-plus mr-2"></i> Create Product
+                                </button>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('admin.attributes.index') }}">
+                                <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
+                                    <i class="fas fa-cogs mr-2"></i> Attributes
+                                </button>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li>
-                    <a href="customer.html">
+                    <a href="{{route('admin.customers.index')}}">
                         <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-white">
                             <i class="fas fa-users mr-3"></i> Customers
                         </button>
@@ -356,28 +379,28 @@
                     </button>
                     <ul class="ml-8 mt-2 space-y-2 hidden" id="orderSubmenu">
                         <li>
-                            <a href="allorder.html">
+                            <a href="{{ route('admin.orders.index') }}">
                                 <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
                                     <i class="fas fa-list mr-2"></i> All Orders
                                 </button>
                             </a>
                         </li>
                         <li>
-                            <a href="pendingOrder.html">
+                            <a href="{{ route('admin.orders.index', ['status' => 'pending']) }}">
                                 <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
                                     <i class="fas fa-clock mr-2"></i> Pending Orders
                                 </button>
                             </a>
                         </li>
                         <li>
-                            <a href="successfulorder.html">
+                            <a href="{{ route('admin.orders.index', ['status' => 'completed']) }}">
                                 <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
-                                    <i class="fas fa-check-circle mr-2"></i> Successful Orders
+                                    <i class="fas fa-check-circle mr-2"></i> Completed Orders
                                 </button>
                             </a>
                         </li>
                         <li>
-                            <a href="cancelledorder.html">
+                            <a href="{{ route('admin.orders.index', ['status' => 'cancelled']) }}">
                                 <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
                                     <i class="fas fa-times-circle mr-2"></i> Cancelled Orders
                                 </button>
@@ -392,14 +415,14 @@
                     </button>
                     <ul class="ml-8 mt-2 space-y-2 hidden" id="categorySubmenu">
                         <li>
-                            <a href="{{route('admin.categories.index')}}">
+                            <a href="{{ route('admin.categories.index') }}">
                                 <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
                                     <i class="fas fa-layer-group mr-2"></i> Main Categories
                                 </button>
                             </a>
                         </li>
                         <li>
-                            <a href="{{route('admin.subcategories.index')}}">
+                            <a href="{{ route('admin.subcategories.index') }}">
                                 <button class="nav-item w-full text-left px-4 py-2 rounded-lg text-white text-sm">
                                     <i class="fas fa-sitemap mr-2"></i> Sub Categories
                                 </button>
@@ -408,7 +431,7 @@
                     </ul>
                 </li>
                 <li>
-                    <a href="analytics.html">
+                    <a href="{{route('admin.analytics')}}">
                         <button class="nav-item w-full text-left px-4 py-3 rounded-lg text-white">
                             <i class="fas fa-chart-line mr-3"></i> Analytics
                         </button>
@@ -423,6 +446,7 @@
                 </li>
             </ul>
         </div>
+
         
         <div class="absolute bottom-0 w-full p-4 border-t border-gray-700">
 			<form action="{{ route('logout') }}" method="POST" id="logout-form">
@@ -493,6 +517,19 @@
                 chevron.classList.remove('rotate-180');
             }
         }
+        function toggleProductSubmenu() {
+            const submenu = document.getElementById('productSubmenu');
+            const chevron = document.getElementById('productChevron');
+            
+            if (submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                chevron.classList.add('rotate-180');
+            } else {
+                submenu.classList.add('hidden');
+                chevron.classList.remove('rotate-180');
+            }
+        }
+
         
         // Delete sub category function
         function deleteSubCategory(subcategoryId) {

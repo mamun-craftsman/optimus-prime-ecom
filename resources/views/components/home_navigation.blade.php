@@ -17,11 +17,9 @@
                         class="bg-transparent text-white w-full focus:outline-none text-sm placeholder:text-gray-400"
                         autocomplete="off">
 
-                    <!-- Search Results Dropdown -->
                     <div id="searchResults"
                         class="absolute top-full left-0 right-0 bg-gray-800 border border-gray-700 rounded-lg shadow-xl mt-1 max-h-96 overflow-y-auto hidden z-50">
                         <div id="searchResultsContent" class="py-2">
-                            <!-- Results will be populated here -->
                         </div>
                         <div id="searchLoading" class="hidden p-4 text-center text-gray-400 text-sm">
                             <i class="fas fa-spinner fa-spin mr-2"></i>
@@ -43,6 +41,20 @@
                         <i class="fas fa-bars text-base"></i>
                     </button>
                 </div>
+                @if (!Auth::check())
+                    <div class="hidden md:flex items-center space-x-2">
+                        <a href="{{ route('login') }}"
+                            class="nav-btn px-2 lg:px-3 py-2 rounded-lg text-white text-xs lg:text-sm whitespace-nowrap">
+                            <i class="fas fa-sign-in-alt mr-1"></i>
+                            <span class="hidden lg:inline">Login</span>
+                        </a>
+                        <a href="{{ route('signup') }}"
+                            class="nav-btn px-2 lg:px-3 py-2 rounded-lg text-white text-xs lg:text-sm whitespace-nowrap">
+                            <i class="fas fa-user-plus mr-1"></i>
+                            <span class="hidden lg:inline">Register</span>
+                        </a>
+                    </div>
+                @else
                 <div class="hidden md:flex items-center space-x-2">
                     <div class="relative">
                         <button id="userMenuBtn"
@@ -55,10 +67,10 @@
                         <div id="userMenuDropdown"
                             class="absolute right-0 mt-2 w-48 bg-gray-800 border border-gray-700 rounded-lg shadow-lg hidden z-50">
                             <div class="py-1">
-                                <a href="{{ route('profile.index') }}"
+                                <a href="{{ Auth::user()->role=='admin'?route('admin.analytics'):route('profile.index') }}"
                                     class="flex items-center px-4 py-2 text-sm text-white hover:bg-gray-700">
                                     <i class="fas fa-user mr-2"></i>
-                                    Profile
+                                    {{Auth::user()->role=='admin'?'Admin Panel':'My Profile'}}
                                 </a>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -72,6 +84,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
             <div class="relative">
                 <button id="scrollLeft"

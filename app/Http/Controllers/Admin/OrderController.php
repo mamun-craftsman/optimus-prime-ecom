@@ -32,9 +32,6 @@ class OrderController extends Controller
             case 'cancelled':
                 $query->where('order_status', 'cancelled');
                 break;
-            case 'all':
-            default:
-                break;
         }
 
         if ($search) {
@@ -74,9 +71,7 @@ class OrderController extends Controller
             'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
         ]);
 
-        $order->update([
-            'order_status' => $request->status
-        ]);
+        $order->update(['order_status' => $request->status]);
 
         return response()->json([
             'success' => true,
@@ -100,7 +95,6 @@ class OrderController extends Controller
     {
         try {
             $order->orderItems()->delete();
-            
             $order->delete();
 
             return response()->json([
@@ -134,26 +128,78 @@ class OrderController extends Controller
                     break;
 
                 case 'update_status':
-                    $request->validate([
-                        'status' => 'required|in:pending,processing,shipped,delivered,cancelled'
-                    ]);
-                    
-                    Order::whereIn('id', $orderIds)->update([
-                        'order_status' => $request->status
-                    ]);
+                    $request->validate(['status' => 'required|in:pending,processing,shipped,delivered,cancelled']);
+                    Order::whereIn('id', $orderIds)->update(['order_status' => $request->status]);
                     $message = 'Order status updated successfully';
                     break;
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => $message
-            ]);
+            return response()->json(['success' => true, 'message' => $message]);
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Error processing bulk action'
-            ], 500);
+            return response()->json(['success' => false, 'message' => 'Error processing bulk action'], 500);
         }
+    }
+
+    public function export(Request $request)
+    {
+        $status = $request->get('status', 'all');
+        $search = $request->get('search');
+
+        $query = Order::with(['user', 'orderItems.product']);
+
+        switch ($status) {
+            case 'pending':
+                $query->whereIn('order_status', ['pending', 'processing']);
+                break;
+            case 'completed':
+                $query->where('order_status', 'shipped');
+                break;
+            case 'cancelled':
+                $query->where('order_status', 'cancelled');
+                break;
+        }
+
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('order_number', 'LIKE', "%{$search}%")
+                  ->orWhere('full_name', 'LIKE', "%{$search}%")
+                  ->orWhere('email', 'LIKE', "%{$search}%")
+                  ->orWhere('phone', 'LIKE', "%{$search}%")
+                  ->orWhere('transaction_id', 'LIKE', "%{$search}%");
+            });
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')->get();
+
+        $csvData = [];
+        $csvData[] = ['Order ID', 'Customer', 'Email', 'Phone', 'Date', 'Items', 'Total', 'Status', 'Payment Method'];
+
+        foreach ($orders as $order) {
+            $items = $order->orderItems->pluck('product.name')->join(', ');
+            $csvData[] = [
+                $order->order_number,
+                $order->full_name,
+                $order->email,
+                $order->phone,
+                $order->created_at->format('Y-m-d H:i:s'),
+                $items,
+                $order->total,
+                $order->order_status,
+                $order->payment_method
+            ];
+        }
+
+        $filename = 'orders_export_' . date('Y-m-d_H-i-s') . '.csv';
+        
+        $handle = fopen('php://output', 'w');
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        
+        foreach ($csvData as $row) {
+            fputcsv($handle, $row);
+        }
+        
+        fclose($handle);
+        exit;
     }
 }

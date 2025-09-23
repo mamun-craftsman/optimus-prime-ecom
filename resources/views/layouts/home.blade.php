@@ -708,7 +708,7 @@
                     if (categoryId == "{{ $category->id }}") {
                         @foreach ($category->subcategories as $subcategory)
                             html += `
-                                <a href="{{ route('subcategory.show', $subcategory->slug) }}" class="brand-item">
+                                <a href="{{ route('category.subcategory', ['categorySlug' => $category->slug, 'subcategorySlug' => $subcategory->slug]) }}" class="brand-item">
                                     <div class="brand-icon">
                                         @if ($subcategory->icon)
                                             <img src="{{ asset('storage/' . $subcategory->icon) }}" alt="{{ $subcategory->name }}" class="w-4 h-4 object-contain">

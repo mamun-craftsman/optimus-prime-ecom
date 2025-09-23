@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductVariationController;
 use App\Http\Controllers\Admin\SubcategoryController;
@@ -61,6 +64,19 @@ Route::controller(ProductController::class)->middleware(['auth', 'status:admin']
 
 });
 
+Route::prefix('admin')->middleware(['auth', 'status:admin'])->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/export', [OrderController::class, 'export'])->name('admin.orders.export');
+    Route::get('/orders/{order}', [OrderController::class, 'show'])->name('admin.orders.show');
+    Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+    Route::delete('/orders/{order}', [OrderController::class, 'destroy'])->name('admin.orders.destroy');
+    Route::post('/orders/bulk-action', [OrderController::class, 'bulkAction'])->name('admin.orders.bulkAction');
+    Route::get('/api/orders/status-counts', [OrderController::class, 'getStatusCounts'])->name('admin.orders.statusCounts');
+});
+
+
+
+
 
 Route::controller(ProductVariationController::class)->middleware(['auth', 'status:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/attributes/all', 'attributeIndex')->name('attributes.index');
@@ -76,14 +92,14 @@ Route::controller(ProductVariationController::class)->middleware(['auth', 'statu
 
 Route::controller(ControllersCategoryController::class)->group(function () {
     Route::get('/categories', 'index')->name('categories.index');
-    Route::get('/category/{category:slug}', 'show')->name('category.show');
 });
 
 // Subcategory Controller Routes
 Route::controller(ControllersSubcategoryController::class)->group(function () {
     Route::get('/subcategory/{subcategory:slug}', 'show')->name('subcategory.show');
-    Route::get('/category/{category:slug}/subcategories', 'index')->name('subcategories.index');
 });
+Route::get('/categories/{slug}', [ControllersProductController::class, 'category'])->name('category.show');
+Route::get('/categories/{categorySlug}/{subcategorySlug}', [ControllersProductController::class, 'subcategory'])->name('category.subcategory');
 
 // Product Controller Routes
 Route::controller(ControllersProductController::class)->group(function () {
@@ -141,6 +157,15 @@ Route::middleware('auth', 'status:customer')->group(function () {
 });
 
 
+Route::middleware(['auth', 'status:admin'])->prefix('admin')->group(function () {    
+    Route::get('/analytics', [AdminController::class, 'analytics'])->name('admin.analytics');
+});
+Route::middleware(['auth', 'status:admin'])->prefix('admin')->group(function () {
+    Route::get('/customers', [CustomerController::class, 'index'])->name('admin.customers.index');
+    Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('admin.customers.show');
+    Route::patch('/customers/{customer}/status', [CustomerController::class, 'updateStatus'])->name('admin.customers.updateStatus');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('admin.customers.destroy');
+});
 
 
 require __DIR__.'/auth.php';

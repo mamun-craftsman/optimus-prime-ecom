@@ -17,8 +17,8 @@
                     <p class="text-gray-400 mb-4">{{ $user->email }}</p>
                     <p class="text-gray-400 mb-6">{{ $user->phone }}</p>
                     
-                    <a href="{{ route('profile.edit') }}" class="btn-primary w-full">
-                        <i class="fas fa-edit mr-2"></i>Edit Profile
+                    <a href="{{ route('profile.edit') }}" class="btn-primary w-full text-white">
+                        <i class="fas fa-edit mr-2"></i>Edit Profile 
                     </a>
                 </div>
                 
@@ -58,7 +58,7 @@
                                         <span class="px-2 py-1 rounded-full text-xs
                                             @if($order->order_status === 'pending') bg-yellow-500/20 text-yellow-400
                                             @elseif($order->order_status === 'processing') bg-blue-500/20 text-blue-400
-                                            @elseif($order->order_status === 'shipped') bg-purple-500/20 text-purple-400
+                                            @elseif($order->order_status === 'shipped') bg-white text-green-400
                                             @else bg-green-500/20 text-green-400
                                             @endif">
                                             {{ ucfirst($order->order_status) }}

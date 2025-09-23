@@ -28,7 +28,7 @@ class HomeController extends Controller
             ->paginate(8);
 
         if ($request->ajax()) {
-            $html = view('home.partials.product_cards', [
+            $html = view('partials.product_cards', [
                 'products' => $featuredProducts
             ])->render();
 

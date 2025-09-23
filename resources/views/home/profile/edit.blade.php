@@ -17,7 +17,7 @@
                         <form action="{{ route('profile.photo') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             <input type="file" name="photo" accept="image/*" class="hidden" id="photoInput">
-                            <label for="photoInput" class="btn-secondary cursor-pointer">
+                            <label for="photoInput" class="btn-secondary cursor-pointer text-white">
                                 <i class="fas fa-camera mr-2"></i>Change Photo
                             </label>
                             @error('photo')

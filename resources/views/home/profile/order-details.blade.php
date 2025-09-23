@@ -24,15 +24,21 @@
                                 
                                 <div class="flex-1">
                                     <h4 class="font-semibold text-white">{{ $item->product->name }}</h4>
+                                    @inject('variationModel', 'App\Models\ProductVariation')
+
                                     @if($item->variations)
                                         <div class="flex flex-wrap gap-1 mt-1">
                                             @foreach(json_decode($item->variations, true) as $variationId)
+                                                @php
+                                                    $variation = $variationModel->find($variationId);
+                                                @endphp
                                                 <span class="bg-neon/20 text-neon text-xs px-2 py-1 rounded-full">
-                                                    Variation #{{ $variationId }}
+                                                    {{ $variation ? $variation->name : 'Variation #' . $variationId }}
                                                 </span>
                                             @endforeach
                                         </div>
                                     @endif
+
                                     <p class="text-gray-400 text-sm mt-1">Quantity: {{ $item->quantity }}</p>
                                 </div>
                                 

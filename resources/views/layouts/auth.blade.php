@@ -209,7 +209,10 @@
     
     <div class="container mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen">
         <div class="text-center mb-10 animate-float">
-            <h1 class="text-5xl md:text-6xl font-bold logo-text text-white mb-2 glow-text">OPTIMUS PRIME</h1>
+            <a href="{{route('home.index')}}">
+                <h1 class="text-5xl md:text-6xl font-bold logo-text text-white mb-2 glow-text">OPTIMUS PRIME</h1>
+            </a>
+            
             <p class="text-xl text-gray-300 form-subtitle">Mobile Shop & Gaming Accessories</p>
         </div>
         
